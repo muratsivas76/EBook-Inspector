@@ -1,0 +1,4 @@
+If does not exist keystore file:
+./kstore.sh
+
+./make.sh

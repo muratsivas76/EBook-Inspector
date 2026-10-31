@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:padding="16dp">
+
+    <!-- Find toolbar: hidden by default, shown when Find is selected -->
+    <LinearLayout
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        android:padding="4dp"
+        android:visibility="gone"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btn_close_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:textColor="#FF0000"
+            android:textStyle="bold"
+            android:minWidth="50dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/search_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="8dp"
+            android:text="Find..."
+            android:textSize="14sp"
+            android:textColor="#007BFF"
+            android:textStyle="bold"
+            android:gravity="end"/>
+
+        <Button
+            android:id="@+id/btn_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&lt;"
+            android:textSize="14sp"
+            android:minWidth="50dp"
+            android:textStyle="bold"
+            android:textColor="#007BFF"/>
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&gt;"
+            android:textSize="14sp"
+            android:minWidth="50dp"
+            android:textStyle="bold"
+            android:textColor="#007BFF"/>
+    </LinearLayout>
+
+    <net.murat.uikit.MEditor
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:gravity="top|start"
+        android:textColor="#333333"
+        android:textSize="22sp"
+        android:inputType="none"
+        android:textIsSelectable="true"
+        android:paddingLeft="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="56dp" />
+
+</LinearLayout>

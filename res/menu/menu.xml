@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_select"
+        android:title="Select" />
+    <item
+        android:id="@+id/menu_decode"
+        android:title="Decode" />
+    <item
+        android:id="@+id/menu_pages"
+        android:title="Pages" />
+    <item
+        android:id="@+id/menu_beautify"
+        android:title="Beautify" />
+    <item
+        android:id="@+id/menu_clean_page_numbers"
+        android:title="Clean Page Numbers" />
+    <item
+        android:id="@+id/menu_export"
+        android:title="Export" />
+
+    <item
+        android:id="@+id/menu_format"
+        android:title="Format">
+        <menu>
+            <item
+                android:id="@+id/menu_format_fg"
+                android:title="FG" />
+            <item
+                android:id="@+id/menu_format_bg"
+                android:title="BG" />
+            <item
+                android:id="@+id/menu_format_font_style"
+                android:title="Font Style" />
+            <item
+                android:id="@+id/menu_format_font_size"
+                android:title="Font Size" />
+            <item
+                android:id="@+id/menu_format_line_spacing"
+                android:title="Line Spacing Multiplier" />
+            <item
+                android:id="@+id/menu_format_reset"
+                android:title="Reset" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_search_term"
+        android:title="Change Search Term" />
+    <item
+        android:id="@+id/menu_find"
+        android:title="Find" />
+    <item
+        android:id="@+id/menu_help"
+        android:title="Help" />
+    <item
+        android:id="@+id/menu_exit"
+        android:title="Exit" />
+</menu>
