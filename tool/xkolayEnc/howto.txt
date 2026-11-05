@@ -1,0 +1,6 @@
+Process orden:
+
+1. Run kstore sh file.
+When there is keystore file exists, do not run this script again.
+
+2. Run make sh file.

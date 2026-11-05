@@ -1,0 +1,83 @@
+#####
+Rehbere kişi ekleme(k):
+
+Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+
+contactIntent
+        .putExtra(ContactsContract.Intents.Insert.NAME, "Contact Name")
+        .putExtra(ContactsContract.Intents.Insert.PHONE, "5555555555");
+
+startActivityForResult(contactIntent, 1);
+startActivityForResult() gives you the opportunity to see the result.
+
+I've noticed the resultCode works on >5.0 devices,
+
+but I have an older Samsung (<5) that always returns RESULT_CANCELLED (0).
+
+Which I understand is the default return if an activity doesn't expect to return anything.
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
+
+    if (requestCode == 1)
+    {
+        if (resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Added Contact", Toast.LENGTH_SHORT).show();
+        }
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(this, "Cancelled Added Contact", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+###
+Get Contacts List:
+private void getContactList() {
+  ContentResolver cr = getContentResolver();
+  Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+          null, null, null, null);
+
+  if ((cur != null ? cur.getCount() : 0) > 0) {
+      while (cur != null && cur.moveToNext()) {
+          String id = cur.getString(
+                  cur.getColumnIndex(ContactsContract.Contacts._ID));
+          String name = cur.getString(cur.getColumnIndex(
+                  ContactsContract.Contacts.DISPLAY_NAME));
+
+          if (cur.getInt(cur.getColumnIndex(
+                  ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+              Cursor pCur = cr.query(
+                      ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                      null,
+                      ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                      new String[]{id}, null);
+              while (pCur.moveToNext()) {
+                  String phoneNo = pCur.getString(pCur.getColumnIndex(
+                          ContactsContract.CommonDataKinds.Phone.NUMBER));
+                  Log.i(TAG, "Name: " + name);
+                  Log.i(TAG, "Phone Number: " + phoneNo);
+              }
+              pCur.close();
+          }
+      }
+  }
+  if(cur!=null){
+    cur.close();
+  }
+}
+//*****//
+public List<String> getNumber(ContentResolver cr)
+{
+    List<String> phonebook = new ArrayList<>();
+    Cursor phones = 
+	cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+    // use the cursor to access the contacts
+    while (phones.moveToNext())
+    {
+        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        phonebook.add(phoneNumber);
+    }
+    return phonebook;
+}
+//****//

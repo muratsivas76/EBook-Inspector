@@ -1,0 +1,9 @@
+rm -fv bin/*.signed.*
+rm -fv bin/*.unsigned.*
+rm -fv bin/*.idsig
+rm -fv classes.dex
+rm -fv bin/classes.dex
+rm -fv bin/*.apk
+rm -fv *.keystore.old
+rm -rfv obj/*
+rm -rfv docs/*
