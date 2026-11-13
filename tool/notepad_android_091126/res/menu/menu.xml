@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- FILE OPERATIONS -->
+    <item
+        android:id="@+id/action_file_group"
+        android:title="File">
+        <menu>
+            <item
+                android:id="@+id/menu_new"
+                android:title="New File" />
+            <item
+                android:id="@+id/menu_open"
+                android:title="Open" />
+            <item
+                android:id="@+id/menu_save"
+                android:title="Save" />
+            <item
+                android:id="@+id/menu_save_segment"
+                android:title="Save Current Segment" />
+            <item
+                android:id="@+id/menu_open_dec"
+                android:title="Open with Decrypt" />
+            <item
+                android:id="@+id/menu_save_enc"
+                android:title="Save with Encrypt" />
+            <item
+                android:id="@+id/menu_change_maxlen"
+                android:title="Change MaxFileChunk" />
+        </menu>
+    </item>
+
+    <!-- SEARCH & REPLACE GROUP -->
+    <item
+        android:id="@+id/action_search_group"
+        android:title="Find &amp; Replace">
+        <menu>
+            <item
+                android:id="@+id/menu_change_find_word"
+                android:title="Change Search Terms" />
+            <item
+                android:id="@+id/menu_replace"
+                android:title="Replace All" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_find"
+        android:title="Find Next" />
+
+    <!-- LINE OPERATIONS -->
+    <item
+        android:id="@+id/action_line_group"
+        android:title="Line Operations">
+        <menu>
+            <item
+                android:id="@+id/menu_goto_line"
+                android:title="Go to Line" />
+            <item
+                android:id="@+id/menu_trim_lines"
+                android:title="Trim All Lines" />              
+            <item
+                android:id="@+id/menu_remove_starts"
+                android:title="Remove Starts With" />
+            <item
+                android:id="@+id/menu_remove_contains"
+                android:title="Remove Contains" />
+            <item
+                android:id="@+id/menu_remove_notcontains"
+                android:title="Remove Not Contains" />
+            <item
+                android:id="@+id/menu_remove_pagenums"
+                android:title="Remove Page Numbers" />
+            <item
+				android:id="@+id/menu_sort_lines"
+				android:title="Sort Lines" />
+			<item
+				android:id="@+id/menu_remove_empty_lines"
+				android:title="Remove Empty Lines" />
+            <item
+                android:id="@+id/menu_remove_numlines"
+                android:title="Remove Numbered Lines" />
+            <item
+                android:id="@+id/menu_select_numlines"
+                android:title="Select Numbered Lines" />
+            <item
+                android:id="@+id/menu_remove_foreign"
+                android:title="Remove Foreign Alphabets" />
+        </menu>
+    </item>
+
+    <!-- EDITING & FORMATTING TOOLS -->
+    <item
+        android:id="@+id/action_tools_group"
+        android:title="Tools">
+        <menu>
+            <item
+                android:id="@+id/menu_insert_date"
+                android:title="Insert Date &amp; Time" />
+            <item
+                android:id="@+id/menu_clean_spaces"
+                android:title="Clean Extra Spaces" />
+            <item
+                android:id="@+id/menu_clear_junk"
+                android:title="Remove Junk Characters" />
+            <item
+                android:id="@+id/menu_clear_text"
+                android:title="Clear Text" />
+            <item
+                android:id="@+id/menu_clear_tags"
+                android:title="Clear Tags" />
+            <item
+                android:id="@+id/menu_clean_larger"
+                android:title="Strip Chars Larger Than" />
+            <item
+                android:id="@+id/menu_specific_info"
+                android:title="Specific Char-Word Info" />
+            <item
+                android:id="@+id/menu_char_info"
+                android:title="Character Analysis" />
+            <item
+                android:id="@+id/menu_append_char"
+                android:title="Append Special Char" />
+            <item
+                android:id="@+id/menu_editor_info"
+                android:title="Editor Info" />
+            <item
+                android:id="@+id/menu_add_diyez"
+                android:title="Add Diyez to Footnotes" />
+            <item
+                android:id="@+id/menu_to_brackets"
+                android:title="Footnotes to Brackets" />
+			<item
+				android:id="@+id/menu_append_meanings"
+				android:title="Append Meanings" />
+        </menu>
+    </item>
+    
+    <!-- ENCODE TOOLS -->
+    <item
+        android:id="@+id/action_tools_encode_group"
+        android:title="Encode/Decode Tools">
+        <menu>
+			<item
+                android:id="@+id/menu_sha_generate"
+                android:title="Generate SHA-256 Hash" />  
+			<item
+				android:id="@+id/menu_base64_encode"
+				android:title="Base64 Encode" />
+			<item
+				android:id="@+id/menu_base64_decode"
+				android:title="Base64 Decode" />
+			<item
+				android:id="@+id/menu_url_encode"
+				android:title="URL Encode" />
+			<item
+				android:id="@+id/menu_url_decode"
+				android:title="URL Decode" />
+        </menu>
+    </item>
+    	
+	<!-- SPLIT & MERGE -->
+    <item
+        android:id="@+id/action_spmrg_group"
+        android:title="Split-Merge_Operations">
+        <menu>
+			<item
+				android:id="@+id/menu_find_filename"
+				android:title="Locate Files" />
+			<item
+				android:id="@+id/menu_searchin_files"
+				android:title="Search Inside Files" />				
+			<item
+				android:id="@+id/menu_split"
+				android:title="Split Text File" />
+            <item
+                android:id="@+id/menu_merge"
+                android:title="Merge Text Files" />
+            <item
+				android:id="@+id/menu_calculate"
+				android:title="Evaluate Expression" />
+		    <item
+				android:id="@+id/menu_compress_image"
+				android:title="Compress Image" />
+        </menu>
+    </item>
+
+    <!-- ARABIC/FARSI OPERATIONS -->
+    <item
+        android:id="@+id/action_arabic_group"
+        android:title="Arabic/Farsi">
+        <menu>
+            <item
+                android:id="@+id/menu_find_islamic_festival"
+                android:title="Find Islamic Festivals" />
+            <item
+                android:id="@+id/menu_karbala_calendar"
+                android:title="Karbala Calendar" />
+            <item
+                android:id="@+id/menu_sel_convert_to_arabic"
+                android:title="Selected Convert to Arabic Characters" />
+            <item
+                android:id="@+id/menu_sel_convert_from_arabic"
+                android:title="Selected Convert from Arabic Characters" />
+            <item
+                android:id="@+id/menu_convert_to_arabic"
+                android:title="Convert to Arabic Characters" />
+            <item
+                android:id="@+id/menu_convert_from_arabic"
+                android:title="Convert from Arabic Characters" />
+        </menu>
+    </item>
+
+    <!-- APPEARANCE SETTINGS (Font & Colors) -->
+    <item
+        android:id="@+id/action_appearance"
+        android:title="Appearance">
+        <menu>
+			<!-- Read Only Mode Checkbox (Added here) -->
+            <item
+                android:id="@+id/menu_read_only"
+                android:title="Read Only Mode"
+                android:checkable="true" />
+            <item
+                android:id="@+id/menu_line_spacing"
+                android:title="Line Spacing" />
+            <!-- Font Sub-Menu -->
+            <item
+                android:id="@+id/menu_font"
+                android:title="Font Settings">
+                <menu>
+                    <item
+                        android:id="@+id/menu_font_family"
+                        android:title="Font Family" />
+                    <item
+                        android:id="@+id/menu_font_style"
+                        android:title="Font Style" />
+                    <item
+                        android:id="@+id/menu_font_size"
+                        android:title="Font Size" />
+                </menu>
+            </item>
+            <!-- Color Sub-Menu -->
+            <item
+                android:id="@+id/menu_color"
+                android:title="Color Settings">
+                <menu>
+                    <item
+                        android:id="@+id/menu_color_bg"
+                        android:title="Background Color" />
+                    <item
+                        android:id="@+id/menu_color_fg"
+                        android:title="Text Color" />
+                    <item
+                        android:id="@+id/menu_color_selection"
+                        android:title="Selection Color" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menu_reset"
+                android:title="Reset" />
+        </menu>
+    </item>
+
+    <!-- ENCODING CONFIGURATION -->
+    <item
+        android:id="@+id/action_encoding_group"
+        android:title="Encoding">
+        <menu>
+            <item
+                android:id="@+id/enc_utf8"
+                android:title="UTF-8 (Universal)" />
+            <item
+                android:id="@+id/enc_tr_win"
+                android:title="Windows-1254 (Turkish)" />
+            <item
+                android:id="@+id/enc_tr_iso"
+                android:title="ISO-8859-9 (Turkish)" />
+            <item
+                android:id="@+id/enc_latin1"
+                android:title="ISO-8859-1 (Latin-1)" />
+            <item
+                android:id="@+id/enc_utf16"
+                android:title="UTF-16" />
+            <item
+                android:id="@+id/enc_ascii"
+                android:title="US-ASCII" />
+            <item
+                android:id="@+id/enc_custom"
+                android:title="Custom Encoding..." />
+        </menu>
+    </item>
+
+	<item
+		android:id="@+id/menu_orientation"
+		android:title="Orientation">
+		<menu>
+			<item
+				android:id="@+id/menu_ltr"
+				android:title="Left to Right (LTR)" />
+			<item
+				android:id="@+id/menu_rtl"
+				android:title="Right to Left (RTL)" />
+			<item
+				android:id="@+id/menu_align_left"
+				android:title="Align Left" />
+			<item
+				android:id="@+id/menu_align_right"
+				android:title="Align Right" />
+			<item
+				android:id="@+id/menu_align_center"
+				android:title="Align Center" />
+			<item
+				android:id="@+id/menu_align_justify"
+				android:title="Align Justify" />
+		</menu>
+	</item>
+	
+	<item
+		android:id="@+id/menu_beautiful"
+		android:title="Beautify">
+		<menu>
+			<item
+				android:id="@+id/menu_code_beautify"
+				android:title="Code" />
+            <item
+                android:id="@+id/menu_beautify"
+                android:title="Text" />
+         </menu>
+    </item>
+                
+    <!-- DIRECT ACTIONS (No Sub-menus) -->
+    <item
+        android:id="@+id/menu_share"
+        android:title="Share Document" />
+
+    <item
+        android:id="@+id/menu_exit"
+        android:title="Exit Application" />
+</menu>

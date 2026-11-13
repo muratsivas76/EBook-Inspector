@@ -1,0 +1,9 @@
+Android app PNG icon sizes:
+36x36
+48x48
+72x72
+96x96
+144x144
+192x192
+
+Play Store high res icon size: 512x512

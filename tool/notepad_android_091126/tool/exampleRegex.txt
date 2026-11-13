@@ -1,0 +1,563 @@
+============================================
+REGEX REPLACE ÖRNEKLERİ (Java 7+ Unicode)
+============================================
+
+Bu dosya, programınızdaki "Regex Replace" özelliği için örnek kullanımları içerir.
+Tüm örnekler OpenJDK 21 ve Pattern.UNICODE_CHARACTER_CLASS ile çalışır.
+
+============================================
+KAÇIŞ DİZİLERİ (Escape Sequences)
+============================================
+
+Programınız artık \n, \t, \r, \b, \f, \\ kaçış dizilerini desteklemektedir.
+Kullanıcı "From" veya "To" alanlarına doğrudan \n yazabilir.
+
+Örnek:
+From: \.
+To:   \n
+Metin: "Merhaba.Dünya"
+Sonuç: "Merhaba\nDünya"
+
+============================================
+TEMEL ÖRNEKLER
+============================================
+
+1. Rakamları sil
+From: \d+
+To:   (boş)
+Metin: "abc123def456"
+Sonuç: "abcdef"
+
+2. Rakamların sonuna nokta ekle
+From: (\d+)
+To:   $1.
+Metin: "25 50 57"
+Sonuç: "25. 50. 57."
+
+3. Rakamların sonuna nokta ve newline ekle
+From: (\d+)
+To:   $1.\n
+Metin: "1 2 3"
+Sonuç: "1.\n2.\n3.\n"
+
+4. Tüm harfleri X yap
+From: \p{L}
+To:   X
+Metin: "Merhaba Dünya"
+Sonuç: "XXXXXXX XXXXX"
+
+5. Boşlukları sil
+From: \s+
+To:   (boş)
+Metin: "Merhaba   Dünya"
+Sonuç: "MerhabaDünya"
+
+6. Birden fazla boşluğu tek boşluk yap
+From: \s+
+To:   
+Metin: "Merhaba    Dünya    123"
+Sonuç: "Merhaba Dünya 123"
+
+============================================
+SATIR SONU İŞLEMLERİ
+============================================
+
+7. Satır sonlarını boşluk yap (metni tek satır yap)
+From: \R
+To:   
+Metin: "Satır1\nSatır2\nSatır3"
+Sonuç: "Satır1 Satır2 Satır3"
+
+8. Satır sonlarını virgül+boşluk yap
+From: \R
+To:   , 
+Metin: "elma\narmut\nüzüm"
+Sonuç: "elma, armut, üzüm"
+
+9. Çift satır sonunu paragraf ayracı yap
+From: \R\R
+To:   \n\n
+Metin: "Satır1\n\nSatır2\nSatır3"
+Sonuç: "Satır1\n\nSatır2 Satır3" (üçüncü satır yukarı çekilir)
+
+10. Windows satır sonlarını Unix satır sonuna çevir
+From: \r\n
+To:   \n
+Metin: "Satır1\r\nSatır2\r\nSatır3"
+Sonuç: "Satır1\nSatır2\nSatır3"
+
+============================================
+OCR DÜZELTME ÖRNEKLERİ
+============================================
+
+11. Ahmet:234geldi. → Ahmet geldi.
+From: (\p{L}+):\d+(\p{L}+)
+To:   $1 $2
+Metin: "Ahmet:234geldi. Mehmet:56okula."
+Sonuç: "Ahmet geldi. Mehmet okula."
+
+12. Kelime?123 şeklindeki OCR bozuntularını temizle (sadece kelime bırak)
+From: (\w+)\?\d+
+To:   $1
+Metin: "idelim?135 cümlesi"
+Sonuç: "idelim cümlesi"
+
+13. Kelime?123 şeklindeki OCR bozuntularını tamamen sil
+From: \w+\?\d+
+To:   (boş)
+Metin: "idelim?135 cümlesi"
+Sonuç: " cümlesi"
+
+14. Nokta ve rakam temizliği (fiyat.245 → fiyat)
+From: \.\d+
+To:   (boş)
+Metin: "fiyat.245 TL"
+Sonuç: "fiyat TL"
+
+15. Köşeli parantez içindeki metinden sonra gelen noktayı sil
+From: \]\.\s+([a-z])
+To:   ] $1
+Metin: "müracaat [başvuru]. esnasında"
+Sonuç: "müracaat [başvuru] esnasında"
+
+============================================
+HARF DÖNÜŞÜMLERİ
+============================================
+
+16. m ile başlayan kelimeleri M ile başlat
+From: \bm(\w*)
+To:   M$1
+Metin: "mert mehmet ali mike"
+Sonuç: "Mert Mehmet ali Mike"
+
+17. Sadece ilk harfi büyük yap (kelime başında)
+From: \b([a-zA-Zğüşıöç])([a-zA-Zğüşıöç]*)
+To:   \u$1$2
+Not: \u Java'da replacement içinde çalışmaz! Ayrı buton gerekir.
+Alternatif: \u yerine üst sıradaki dönüşüm için kod gerekir.
+
+18. Tüm harfleri büyük yapmak için ayrı bir fonksiyon gerekir.
+Regex ile yapılamaz.
+
+============================================
+FORMAT DÖNÜŞÜMLERİ
+============================================
+
+19. Tarih formatı: 12.05.2025 → 2025-05-12
+From: (\d{2})\.(\d{2})\.(\d{4})
+To:   $3-$2-$1
+Metin: "12.05.2025"
+Sonuç: "2025-05-12"
+
+20. Tarih formatı: 12/05/2025 → 2025-05-12
+From: (\d{2})/(\d{2})/(\d{4})
+To:   $3-$2-$1
+Metin: "12/05/2025"
+Sonuç: "2025-05-12"
+
+21. Telefon formatı: 555-123-4567 → (555) 123-4567
+From: (\d{3})-(\d{3})-(\d{4})
+To:   ($1) $2-$3
+Metin: "555-123-4567"
+Sonuç: "(555) 123-4567"
+
+22. Telefon formatı: 5551234567 → (555) 123-4567
+From: (\d{3})(\d{3})(\d{4})
+To:   ($1) $2-$3
+Metin: "5551234567"
+Sonuç: "(555) 123-4567"
+
+23. Noktalı sayı formatı: 1.234.567 → 1234567
+From: \.
+To:   (boş)
+Metin: "1.234.567"
+Sonuç: "1234567"
+
+24. Virgüllü sayı formatı: 1,234,567 → 1234567
+From: ,
+To:   (boş)
+Metin: "1,234,567"
+Sonuç: "1234567"
+
+============================================
+METİN TEMİZLİK ÖRNEKLERİ
+============================================
+
+25. Özel karakterleri sil (sadece harf ve rakam kalsın)
+From: [^\p{L}\p{N}\s]
+To:   (boş)
+Metin: "Merhaba! @dünya #123?"
+Sonuç: "Merhaba dünya 123"
+
+26. Noktalama işaretlerini sil
+From: [\p{P}]
+To:   (boş)
+Metin: "Merhaba, dünya! Nasılsın?"
+Sonuç: "Merhaba dünya Nasılsın"
+
+27. Tab karakterlerini sil
+From: \t
+To:   (boş)
+Metin: "Merhaba\tDünya"
+Sonuç: "MerhabaDünya"
+
+28. Tab karakterlerini boşluk yap
+From: \t
+To:   
+Metin: "Merhaba\tDünya"
+Sonuç: "Merhaba Dünya"
+
+29. Backspace karakterlerini sil
+From: \b
+To:   (boş)
+Not: \b regex'te kelime sınırıdır. Gerçek backspace için kaçış gerekmez.
+
+============================================
+KELİME İŞLEMLERİ
+============================================
+
+30. Kelimelerin yerini değiştir (Ahmet Mehmet → Mehmet Ahmet)
+From: (\p{L}+)\s+(\p{L}+)
+To:   $2 $1
+Metin: "Ahmet Mehmet"
+Sonuç: "Mehmet Ahmet"
+
+31. Sadece 3 harfli kelimeleri sil
+From: \b\p{L}{3}\b
+To:   (boş)
+Metin: "Ali eve gel merhaba"
+Sonuç: "eve gel merhaba"
+
+32. Kelimelerin başına ve sonuna * ekle
+From: (\p{L}+)
+To:   *$1*
+Metin: "Merhaba Dünya"
+Sonuç: "*Merhaba* *Dünya*"
+
+33. 5 harften uzun kelimeleri kısalt
+From: \b(\p{L}{5})\p{L}+\b
+To:   $1...
+Metin: "Merhaba Dünya"
+Sonuç: "Merha... Dünya"
+
+============================================
+RAKAM İŞLEMLERİ
+============================================
+
+34. 2 haneli sayıları bul
+From: \b\d{2}\b
+To:   [İKİ]
+Metin: "12 3 456 78"
+Sonuç: "[İKİ] 3 456 [İKİ]"
+
+35. Sayıları yazıya çevirmek için önce yakala
+From: (\d+)
+To:   SAYI($1)
+Metin: "5 elma 3 armut"
+Sonuç: "SAYI(5) elma SAYI(3) armut"
+
+36. Rakamların arasına virgül koy (1234 → 1,2,3,4)
+From: (\d)(?=\d)
+To:   $1,
+Metin: "1234"
+Sonuç: "1,2,3,4"
+
+============================================
+TÜRKÇE KARAKTER ÖRNEKLERİ
+============================================
+
+37. Türkçe karakterleri koru (sadece İngilizce harfleri sil)
+From: [a-zA-Z]
+To:   (boş)
+Metin: "Merhaba ğüşıöç"
+Sonuç: " ğüşıöç"
+
+38. Türkçe karakterleri İngilizce karşılıklarına çevir (yaklaşık)
+Not: Regex ile birebir çeviri zordur. Ayrı buton gerekir.
+Örnek: "ğ" → "g", "ü" → "u" gibi.
+
+39. Sadece Türkçe karakterleri bul
+From: [ğüşıöçĞÜŞİÖÇ]
+To:   [TR]
+Metin: "Merhaba Dünya ğüşıöç"
+Sonuç: "Merhaba Dünya [TR][TR][TR][TR][TR][TR]"
+
+============================================
+UNICODE ÖRNEKLERİ (Tüm Diller için)
+============================================
+
+40. Arapça harfleri yakala
+From: \p{IsArabic}+
+To:   [ARAPÇA]
+Metin: "Merhaba السلام عليكم Dünya"
+Sonuç: "Merhaba [ARAPÇA] Dünya"
+
+41. Çince karakterleri yakala
+From: \p{IsHan}+
+To:   [ÇİNCE]
+Metin: "你好 Dünya"
+Sonuç: "[ÇİNCE] Dünya"
+
+42. Kiril harfleri yakala (Rusça)
+From: \p{IsCyrillic}+
+To:   [KİRİL]
+Metin: "Привет Dünya"
+Sonuç: "[KİRİL] Dünya"
+
+43. Yunanca harfleri yakala
+From: \p{IsGreek}+
+To:   [YUNANCA]
+Metin: "Γειά σου Dünya"
+Sonuç: "[YUNANCA] Dünya"
+
+============================================
+SATIR BAŞI/SONU İŞLEMLERİ
+============================================
+
+44. Satır başındaki rakamları bul (madde numaraları)
+From: (?m)^\d+\.
+To:   MADDE
+Metin: "1. Madde\n2. Madde\nMetin"
+Sonuç: "MADDE Madde\nMADDE Madde\nMetin"
+
+45. Satır başındaki rakam+nokta+boşluk ile başlayan satırları sil
+From: (?m)^\d+\.\s+.*$
+To:   (boş)
+Metin: "1. Silinecek\nBu kalsın\n2. Silinecek"
+Sonuç: "\nBu kalsın\n"
+
+46. Satır başındaki tüm boşlukları sil (sola yasla)
+From: (?m)^\s+
+To:   (boş)
+Metin: "   Merhaba\n  Dünya"
+Sonuç: "Merhaba\nDünya"
+
+47. Satır sonundaki boşlukları sil
+From: \s+$
+To:   (boş)
+Metin: "Merhaba   \nDünya  "
+Sonuç: "Merhaba\nDünya"
+
+48. Satır sonuna nokta ekle (nokta yoksa)
+From: (?m)(?<![.!?])$
+To:   .
+Metin: "Merhaba\nNasılsın\nGüzel."
+Sonuç: "Merhaba.\nNasılsın.\nGüzel."
+
+============================================
+BOŞLUK İŞLEMLERİ
+============================================
+
+49. Tüm boşlukları alt çizgi yap
+From: \s+
+To:   _
+Metin: "Merhaba Dünya"
+Sonuç: "Merhaba_Dünya"
+
+50. Boş satırları sil
+From: (?m)^\s*$\r?\n
+To:   (boş)
+Metin: "Satır1\n\n\nSatır2"
+Sonuç: "Satır1\nSatır2"
+
+51. Çift boş satırı tek boş satır yap
+From: \n\s*\n\s*\n
+To:   \n\n
+Metin: "Satır1\n\n\nSatır2"
+Sonuç: "Satır1\n\nSatır2"
+
+============================================
+İLGİNÇ ÖRNEKLER
+============================================
+
+52. Tekrarlanan kelimeleri temizle (merhaba merhaba → merhaba)
+From: \b(\p{L}+)\s+\1\b
+To:   $1
+Metin: "merhaba merhaba dünya"
+Sonuç: "merhaba dünya"
+
+53. Tekrarlanan karakterleri temizle (aaabbbccc → abc)
+From: (.)\1+
+To:   $1
+Metin: "aaabbbccc"
+Sonuç: "abc"
+
+54. Tekrarlanan boşlukları temizle
+From:  {2,}
+To:   
+Metin: "Merhaba    Dünya"
+Sonuç: "Merhaba Dünya"
+
+55. E-posta adresinden domain al
+From: .*@(.*)
+To:   $1
+Metin: "user@gmail.com"
+Sonuç: "gmail.com"
+
+56. E-posta adresinden kullanıcı adı al
+From: (.*)@.*
+To:   $1
+Metin: "user@gmail.com"
+Sonuç: "user"
+
+57. HTML tag'lerini temizle
+From: <[^>]*>
+To:   (boş)
+Metin: "<p>Merhaba</p> <b>Dünya</b>"
+Sonuç: "Merhaba Dünya"
+
+58. Tüm sesli harfleri yıldız yap
+From: [aeiouAEIOUğüşıöçĞÜŞİÖÇ]
+To:   *
+Metin: "Merhaba Dünya"
+Sonuç: "M*r h*b* D*ny*"
+
+59. Tüm sessiz harfleri yıldız yap
+From: [^aeiouAEIOUğüşıöçĞÜŞİÖÇ\s]
+To:   *
+Metin: "Merhaba Dünya"
+Sonuç: "*e**a*a *ü**a"
+
+60. URL'den protokolü temizle (https://example.com → example.com)
+From: ^https?://(.*)
+To:   $1
+Metin: "https://example.com"
+Sonuç: "example.com"
+
+61. **Sadece rakamlardan oluşan satırları komple sil**
+    From: `(?m)^\d+$\R?`
+    To: `(boş)`
+    Metin: `"Satır1\n12345\nSatır2"`
+    Sonuç: `"Satır1\nSatır2"` (Özellikle sayfa numaralarını temizlemek için birebir.)
+
+62. **Kelime içindeki gereksiz tireleri temizle (Satır sonu birleştirme)**
+    From: `(\p{L})-\R(\p{L})`
+    To: `$1$2`
+    Metin: `"Gele- \ncek"`
+    Sonuç: `"Gelecek"` (Kitap taramalarında satır sonuna sığmayan kelimeleri birleştirir.)
+
+63. **Tırnak içindeki metni yakala ve tırnakları değiştir**
+    From: `["“]([^"”]+)["”]`
+    To: `«$1»`
+    Metin: `"Dedi ki "Merhaba"."`
+    Sonuç: `"Dedi ki «Merhaba»."`
+
+64. **İç içe olmayan parantez içini tamamen temizle**
+    From: `\([^)]*\)`
+    To: `(boş)`
+    Metin: `"Elma (meyve) ağacı."`
+    Sonuç: `"Elma  ağacı."`
+
+65. **Metindeki tüm URL'leri [LİNK] yazısıyla gizle**
+    From: `https?://\S+`
+    To: `[LİNK]`
+    Metin: `"Şuraya bak: https://google.com"`
+    Sonuç: `"Şuraya bak: [LİNK]"`
+
+66. **Cümle sonundaki fazla boşlukları temizle ama noktayı koru**
+    From: `\s+([.!?])`
+    To: `$1`
+    Metin: `"Bitti mi ? Hayır ."`
+    Sonuç: `"Bitti mi? Hayır."`
+
+67. **Büyük harfle yazılmış kısaltmaların arasına nokta koy**
+    From: `\b([A-Z])(?=[A-Z]\b|[A-Z][A-Z])`
+    To: `$1.`
+    Metin: `"TDK"`
+    Sonuç: `"T.D.K"` (DİKKAT: Son harfe nokta koymaz, onun için `(\b[A-Z])` mantığıyla ekleme gerekir.)
+
+68. **Sadece metin başındaki ve sonundaki boşlukları (Trim) temizle**
+    From: `^\s+|\s+$`
+    To: `(boş)`
+    Metin: `"  Merhaba Dünya  "`
+    Sonuç: `"Merhaba Dünya"`
+
+69. **Dosya uzantısını sil (Sadece dosya adını bırak)**
+    From: `\.[^.]+$`
+    To: `(boş)`
+    Metin: `"resim.dosyasi.jpg"`
+    Sonuç: `"resim.dosyasi"`
+
+70. **CamelCase kelimeleri ayır (Gelişmiş)**
+    From: `([a-z])([A-Z])`
+    To: `$1 $2`
+    Metin: `"RegexUygulamasıJava"`
+    Sonuç: `"Regex Uygulaması Java"`
+
+71. **Pozitif Lookbehind: Sadece "TL"den önce gelen rakamı yakala**
+    From: `(\d+)(?=\s*TL)`
+    To: `FİYAT($1)`
+    Metin: `"100 TL, 50 dolar"`
+    Sonuç: `"FİYAT(100) TL, 50 dolar"`
+
+72. **Görünmeyen "Zero Width Space" karakterlerini temizle**
+    From: `[\u200B-\u200D\uFEFF]`
+    To: `(boş)`
+    Metin: `"Gizli⁠Karakter"` (Kopyala yapıştır metinlerdeki gizli hataları bozar.)
+
+**Küçük Bir İpucu:** 62. maddedeki `\R` kullanımı hayat kurtarıcıdır çünkü hem Windows (`\r\n`) hem Unix (`\n`) satır sonlarını aynı anda yakalar. Senin programında `\R` desteği olduğu için bu kuralların hepsi tıkır tıkır çalışacaktır.
+
+73. **Parantez Kaybı Önleme Regexi**
+    From: `-\n`
+    To: `(boş)`
+
+    From: `(?m)\(([a-zA-Zşîûâçğöüı]+.*)$`
+    To: `($1).`
+
+74. **Yapışık Kelimeleri Silmek**
+    From: `([\u0040-\u015F]+)(([,:;])|)(\d+)`
+    To: `$1`
+
+    Metin: Merhaba24 selam,65 cadde:98 yol;532. //Bu satırdaki yapışık kelimeleri siler.
+    Sonuç: Merhaba selam cadde yol.
+
+75. **Paragrafı Kendi İçinde Birleştirme Regexi**
+    From: `([a-zşığüöçâûî,:;"])\n([a-zşığüöçâûî])`
+    To: `$1 $2`
+============================================
+NOTLAR
+============================================
+
+- \p{L} : Herhangi bir dildeki harfler (Unicode)
+- \p{N} : Herhangi bir dildeki rakamlar
+- \d    : Rakam (0-9) - Unicode flag ile tüm dillerdeki rakamlar
+- \w    : Kelime karakteri - Unicode flag ile tüm dillerdeki harfler
+- \s    : Boşluk karakterleri (space, tab, newline)
+- \R    : Satır sonu karakterleri (\n, \r\n, \r)
+- \t    : Tab karakteri
+- \n    : Newline (LF - Line Feed)
+- \r    : Carriage Return (CR)
+- \b    : Kelime sınırı (word boundary)
+- $1, $2: Capture grupları (parantez içindeki eşleşmeler)
+- (?m)  : Multiline mode - ^ ve $ her satır başı/sonu olur
+- (?s)  : Singleline mode - . newline'i da yakalar
+
+============================================
+UYARILAR
+============================================
+
+1. Büyük/küçük harf dönüşümleri regex ile yapılamaz!
+   Örnek: "ahmet" → "Ahmet" için ayrı buton gerekir.
+
+2. \u (uppercase) ve \l (lowercase) Java replacement'ta çalışmaz.
+   Bu işlemler için ayrı kod yazılmalıdır.
+
+3. Unicode karakter sınıfları (\\p{IsArabic}) Java 7'de çalışır.
+   Daha eski sürümlerde sorun çıkabilir.
+
+4. Lookahead/lookbehind (görü ileri/geri) özellikleri Java 7'de
+   sınırlı olarak çalışır. Değişken uzunluklu lookbehind desteklenmez.
+
+============================================
+PRATİK KULLANIM TAVSİYELERİ
+============================================
+
+- Regex'i test etmek için önce küçük bir metin üzerinde dene.
+- Özel karakterleri (., *, +, ?, [, (, {, |) kaçırmayı unutma.
+- Capture grupları için parantez kullan, sonra $1, $2 ile çağır.
+- Boşluklar için \s+ (bir veya fazla) veya \s* (sıfır veya fazla) kullan.
+- Satır başı için ^, satır sonu için $ kullan.
+- Multiline mod için (?m) eklemeyi unutma.
+
+============================================
+//Abi tamamdır. Emeğine sağlık. Sağ ol var ol.

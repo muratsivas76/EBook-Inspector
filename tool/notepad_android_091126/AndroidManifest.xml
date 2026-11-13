@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		package="net.murat.notepad"
+		android:versionCode="1"
+		android:versionName="1.0">
+	
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    
+    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="36" />
+
+	<application android:icon="@drawable/notepadlogo"
+				android:label="@string/program_name"
+				android:requestLegacyExternalStorage="true">
+
+		<activity android:name="net.murat.notepad.Notepad"
+					android:label="@string/program_name"
+					android:screenOrientation="portrait"
+			        android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+					android:exported="true">
+
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+
+			<!-- Updated to support all defined code and text MIME types -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				
+				<data android:mimeType="text/plain" />
+				<data android:mimeType="text/x-java" />
+				<data android:mimeType="text/x-kotlin" />
+				<data android:mimeType="text/x-groovy" />
+				<data android:mimeType="text/x-csrc" />
+				<data android:mimeType="text/x-c++src" />
+				<data android:mimeType="text/x-chdr" />
+				<data android:mimeType="text/x-c++hdr" />
+				<data android:mimeType="text/x-csharp" />
+				<data android:mimeType="text/xml" />
+				<data android:mimeType="text/html" />
+				<data android:mimeType="text/css" />
+				<data android:mimeType="text/javascript" />
+				<data android:mimeType="text/x-python" />
+				<data android:mimeType="text/x-ruby" />
+				<data android:mimeType="text/x-go" />
+				<data android:mimeType="text/rust" />
+				<data android:mimeType="text/x-swift" />
+				<data android:mimeType="text/x-lua" />
+				<data android:mimeType="text/x-rsrc" />
+				<data android:mimeType="text/x-perl" />
+				<data android:mimeType="text/x-sh" />
+				<data android:mimeType="text/markdown" />
+				<data android:mimeType="text/x-sql" />
+				<data android:mimeType="text/x-manifest" />
+				<data android:mimeType="text/yaml" />
+				<data android:mimeType="text/x-diff" />
+				<data android:mimeType="text/comma-separated-values" />
+				<data android:mimeType="text/tab-separated-values" />
+
+				<data android:mimeType="application/json" />
+				<data android:mimeType="application/javascript" />
+				<data android:mimeType="application/typescript" />
+				<data android:mimeType="application/xml" />
+				<data android:mimeType="application/x-sh" />
+				<data android:mimeType="application/x-httpd-php" />
+				<data android:mimeType="application/dart" />
+				<data android:mimeType="application/x-bat" />
+				<data android:mimeType="application/x-powershell" />
+				<data android:mimeType="image/svg+xml" />
+			</intent-filter>
+		</activity>
+	</application>
+</manifest>

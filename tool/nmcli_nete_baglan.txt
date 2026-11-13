@@ -1,0 +1,112 @@
+========================================
+nmcli KOMUT REHBERİ - Linux Mint
+========================================
+
+nmcli = NetworkManager Command Line Interface
+Wi-Fi, kablolu bağlantı, VPN vb. yönetmek için kullanılır.
+
+----------------------------------------
+1. GENEL DURUM
+----------------------------------------
+nmcli general status              # Genel ağ durumu (bağlı mı, hangi seviye)
+nmcli general hostname            # Bilgisayar adını göster
+nmcli networking connectivity     # İnternet var mı? (full/limited/none)
+nmcli radio                       # Wi-Fi ve mobil veri açık mı?
+
+----------------------------------------
+2. CİHAZLARI LİSTELE
+----------------------------------------
+nmcli device status               # Tüm ağ cihazları ve durumları
+nmcli device show                 # Tüm cihazların detaylı bilgisi
+nmcli device show wlp3s0          # Belirli bir cihazın detayı
+nmcli device wifi list            # Çevredeki Wi-Fi ağlarını listele
+nmcli device wifi list --rescan yes   # Yeniden tarama yaparak listele
+
+----------------------------------------
+3. BAĞLANTI PROFİLLERİ
+----------------------------------------
+nmcli connection show             # Kayıtlı tüm bağlantı profilleri
+nmcli connection show --active    # Sadece aktif bağlantılar
+nmcli connection show "TurkTelekom_TPB700"   # Belirli profil detayı
+
+----------------------------------------
+4. BAĞLAN / KOP / YENİDEN BAŞLAT
+----------------------------------------
+nmcli connection up "TurkTelekom_TPB700"     # Bağlan
+nmcli connection down "TurkTelekom_TPB700"   # Bağlantıyı kes
+nmcli connection down "TurkTelekom_TPB700" && nmcli connection up "TurkTelekom_TPB700"   # Yeniden bağlan
+
+nmcli device disconnect wlp3s0    # Cihazı bağlantıdan ayır
+nmcli device connect wlp3s0       # Cihazı yeniden bağla
+
+----------------------------------------
+5. Wi-Fi AÇ / KAPAT
+----------------------------------------
+nmcli radio wifi on               # Wi-Fi'yi aç
+nmcli radio wifi off              # Wi-Fi'yi kapat
+nmcli radio wifi                  # Wi-Fi durumunu göster
+
+----------------------------------------
+6. YENİ Wi-Fi BAĞLANTISI EKLE
+----------------------------------------
+nmcli device wifi connect "AG_ADI" password "SIFRE"
+nmcli device wifi connect "AG_ADI" password "SIFRE" hidden yes   # Gizli ağ için
+
+----------------------------------------
+7. BAĞLANTI SİL
+----------------------------------------
+nmcli connection delete "PROFIL_ADI"
+
+----------------------------------------
+8. BAĞLANTI AYARLARINI DEĞİŞTİR
+----------------------------------------
+# Otomatik bağlanmayı aç/kapat
+nmcli connection modify "PROFIL_ADI" connection.autoconnect yes
+nmcli connection modify "PROFIL_ADI" connection.autoconnect no
+
+# Wi-Fi şifresini değiştir
+nmcli connection modify "PROFIL_ADI" wifi-sec.password "YENI_SIFRE"
+
+# Değişiklikleri uygula (bağlantıyı yeniden başlat)
+nmcli connection up "PROFIL_ADI"
+
+----------------------------------------
+9. IP / DNS BİLGİSİ
+----------------------------------------
+nmcli -p connection show "PROFIL_ADI" | grep -i ipv4   # IP bilgisi
+ip addr show wlp3s0               # Alternatif: IP adresini göster
+nmcli device show wlp3s0 | grep -i ip4   # Cihazın IP'si
+
+# Statik IP ayarla (örnek)
+nmcli connection modify "PROFIL_ADI" ipv4.method manual \
+  ipv4.addresses 192.168.1.50/24 \
+  ipv4.gateway 192.168.1.1 \
+  ipv4.dns "8.8.8.8 8.8.4.4"
+nmcli connection up "PROFIL_ADI"
+
+# Tekrar DHCP'ye dön
+nmcli connection modify "PROFIL_ADI" ipv4.method auto
+nmcli connection up "PROFIL_ADI"
+
+----------------------------------------
+10. SORUN GİDERME
+----------------------------------------
+sudo systemctl restart NetworkManager   # Ağ servisini yeniden başlat
+nmcli networking off && nmcli networking on   # Tüm ağı kapat/aç
+nmcli general logging level DEBUG       # Detaylı log (sorun için)
+journalctl -u NetworkManager -f         # Canlı log takibi
+
+----------------------------------------
+11. KISAYOL ÖNERİSİ
+----------------------------------------
+~/.bashrc dosyasına ekle:
+
+alias agyenile='nmcli connection down "TurkTelekom_TPB700" && nmcli connection up "TurkTelekom_TPB700"'
+
+Sonra: source ~/.bashrc
+Kullanım: agyenile
+
+========================================
+Not: Çoğu komut sudo gerektirmez.
+"not authorized" hatası alırsan başına sudo ekle.
+========================================

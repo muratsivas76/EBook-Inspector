@@ -1,0 +1,283 @@
+=========================================================
+REGEX ORNEKLERI - SOHBET DERLEMESI
+=========================================================
+Not: Java string icinde kullanacaksan her \ yerine \\ yaz.
+Ornek: \d  ->  \\d
+       \n  ->  \\n
+
+=========================================================
+1) ICINDE "k" HARFI GECEN KELIMELER
+=========================================================
+src : \b\w*k\w*\b
+dst : (degisiklik yok / ornek amacli)
+
+Turkce karakterler dahil:
+src : \b[\p{L}\p{N}_]*k[\p{L}\p{N}_]*\b
+
+=========================================================
+2) TAMAMEN BUYUK HARF, EN AZ 2 KARAKTER
+=========================================================
+src : \b\p{Lu}{2,}\b
+dst : <b>$0</b>
+
+Alternatif (Türkce buyuk harfler elle):
+src : \b[A-ZÇĞİÖŞÜ]{2,}\b
+dst : <b>$0</b>
+
+=========================================================
+3) BUYUK HARFLE BASLAYIP KUCUK HARFLE BITEN KELIMELER
+   (Example -> EXAMPLE)
+=========================================================
+src : \b[A-ZÇĞİÖŞÜ][a-zçğıöşü]+\b
+dst : $0~~~upperCase   (macro olarak)
+
+Sadece ilk harf buyuk, gerisi kucuk:
+src : ([A-ZÇĞİÖŞÜ])([a-zçğıöşü]+)
+dst : $1$2
+
+=========================================================
+4) "O" ILE BASLAYANLARI HARIC TUTMA
+=========================================================
+src : (?![O])([A-ZÇĞİÖŞÜ'])([A-ZÇĞİÖŞÜ']+)
+dst : (ornek)
+
+O ve o haric:
+src : (?![Oo])([A-ZÇĞİÖŞÜ'])([A-ZÇĞİÖŞÜ']+)
+
+Sadelestirilmis:
+src : (?![O])[A-ZÇĞİÖŞÜ']{2,}
+
+Tam kelime:
+src : \b(?![O])[A-ZÇĞİÖŞÜ']{2,}\b
+
+=========================================================
+5) BUYUK HARFLE BASLAYIP KUCUK HARFLE BITEN (NORVECCE)
+=========================================================
+src : \n([A-ZÀÂÆÇÉÈÊËÎÏÔŒÙÛÜŸ])(.*)([a-zàâæçéèêëîïôœùûüÿ])\n
+dst : \n$1$2$3\n
+
+Unicode ile tum diller:
+src : \n(\p{Lu})(.*?)(\p{Ll})\n
+dst : \n$1$2$3\n
+
+Multiline (ilk/son satir da):
+src : (?m)^(\p{Lu})(.*)(\p{Ll})$
+dst : <b>$1$2$3</b>
+
+=========================================================
+6) TAMAMEN KUCUK HARF TURKCE KELIMELER -> titleCase
+=========================================================
+src : \b([a-zâîûçüöğış][a-zâîûçüöğış]*)
+dst : $1~~~titleCase   (macro olarak)
+
+Unicode:
+src : \b(\p{Ll}\p{L}*)
+dst : $1~~~titleCase
+
+=========================================================
+7) TARIH SATIRLARI (5 Ekim 1918 gibi)
+=========================================================
+Yilli:
+src : (?m)^(\d+)\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(\d+)$
+dst : <b>$1 $2 $3</b>
+
+Yilsiz (sadece 5 Ekim):
+src : (?m)^(\d+)\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)$
+dst : $1 $2.
+
+Yil opsiyonel:
+src : (?m)^(\d+)\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)(\s+\d+)?$
+dst : $1 $2$3.
+
+=========================================================
+8) TAMAMEN BUYUK HARF + NOKTALI TEK KELIME SATIRI (TIPI.)
+=========================================================
+src : (?m)^([A-ZÇĞİÖŞÜ]+\.)$
+dst : <font color="red"><i>$1</i></font>
+
+Cok kelimeli buyuk harf cumle:
+src : (?m)^([A-ZÇĞİÖŞÜ][A-ZÇĞİÖŞÜ\s]*\.)$
+dst : <font color="red"><i>$1</i></font>
+
+=========================================================
+9) **...** ILE BASLAYIP BITEN MUSTAKIL SATIR
+=========================================================
+src : (?m)^(\*\*.+\*\*)$
+dst : <b>$1</b>
+
+Yildizlari da sil:
+src : (?m)^\*\*(.+)\*\*$
+dst : <b>$1</b>
+
+=========================================================
+10) NOKTA ILE BITEN, EN FAZLA 5 KARAKTER (NOKTA DAHIL)
+=========================================================
+src : (?m)^(.{0,4}\.)$
+dst : <b>$1</b>
+
+Sadece harf:
+src : (?m)^([\p{L}]{0,4}\.)$
+dst : <b>$1</b>
+
+Sadece buyuk harf:
+src : (?m)^([A-ZÇĞİÖŞÜ]{0,4}\.)$
+dst : <b>$1</b>
+
+=========================================================
+11) TEK KELIME + NOKTA (Vocabulary. gibi)
+=========================================================
+src : (?m)^([\p{L}]+\.)$
+dst : <font color="red"><b><i>$1</i></b></font>
+
+Herhangi bosluksuz karakter + nokta:
+src : (?m)^(\S+\.)$
+dst : <font color="red"><b><i>$1</i></b></font>
+
+=========================================================
+12) RAKAM ILE BASLAYIP NOKTA ILE BITEN MUSTAKIL SATIR
+=========================================================
+src : (?m)^(\d.*\.)$
+dst : <font color="red"><b><i>$1</i></b></font>
+
+=========================================================
+13) SAYFA NUMARASI SATIRLARINI SIL
+=========================================================
+src : (?m)^=== Sayfa_\d{5}; ===\n
+dst : (bos)
+
+Windows uyumlu:
+src : (?m)^=== Sayfa_\d{5}; ===\r?\n
+dst : (bos)
+
+Sayfa_ veya Sayfa-:
+src : (?m)^=== Sayfa[_-]\d{5}; ===\n
+dst : (bos)
+
+Java string olarak:
+String srcRegex = "(?m)^=== Sayfa[_-]\\d{5}; ===\\n";
+
+=========================================================
+14) DIALOG KONUSMALARI - SADECE ISIM KIRMIZI ITALIK
+=========================================================
+src : (?m)^([A-ZÇĞİÖŞÜ][a-zçğıöşüæøå]*):
+dst : <font color="red"><i>$1</i></font>:
+
+Iki kelimeli isim:
+src : (?m)^([A-ZÇĞİÖŞÜ][a-zçğıöşüæøå]*(?:\s+[A-ZÇĞİÖŞÜ][a-zçğıöşüæøå]*)*):
+dst : <font color="red"><i>$1</i></font>:
+
+=========================================================
+15) NORVECCE TURKCE SOZLUK SATIRLARI
+=========================================================
+src : (?m)^([\p{L}][\p{L} ]*):\s*([\p{L}][\p{L} ]*?)(\.?)$
+dst : <font color="red"><i>$1</i></font>: <font color="#00DD00"><i>$2</i></font>$3
+
+=========================================================
+16) NORVECCE = INGILIZCE (TURKCE) SATIRLARI
+=========================================================
+src : (?m)^(.+?)\s*=\s*(.+?)(\.?)$
+dst : <b><font color="red">$1</font></b> = <b><font color="green">$2</font></b>$3
+
+=========================================================
+17) OCAK|SUBAT|... ALTERNATION (PARANTEZSIZ HATA)
+=========================================================
+Yanlis (Ekim her yerde yakalanir):
+src : \n(\d+) Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık (\d+)\n
+
+Dogru (parantezli):
+src : \n(\d+)\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(\d+)\n
+
+=========================================================
+18) CASE-INSENSITIVE ORNEKLER
+=========================================================
+ASCII:
+src : (?i)merhaba
+
+Unicode (Türkce dahil):
+src : (?iu)merhaba
+
+Kelime siniri ile:
+src : (?iu)\badam\b
+
+=========================================================
+19) LOOKAHEAD / LOOKBEHIND ORNEKLERI
+=========================================================
+$ isaretinden onceki sayi:
+src : \d+(?=\$)
+
+$ isaretinden sonraki sayi:
+src : (?<=\$)\d+
+
+Parantez icindeki sayi:
+src : (?<=\()\d+(?=\))
+
+3 haneli sayi (arkasinda rakam yok):
+src : \d{3}(?!\d)
+
+Unicode guvenli kelime siniri (b yerine):
+src : (?<![\p{L}\p{N}])([A-ZÇĞİÖŞÜ][a-zçğıöşü]+):
+
+=========================================================
+20) NON-CAPTURING GROUP ORNEKLERI
+=========================================================
+Sayi + birim, sadece sayi:
+src : (\d+)\s+(?:kg|gr|lt|ml)
+dst : $1
+
+Isim + yas:
+src : (?:\w+)\s+(\d+)\s+yaşında
+dst : $1
+
+=========================================================
+21) DOTALL (?s) ORNEKLERI
+=========================================================
+Cok satirli blok:
+src : (?s)Başlangıç.*?Bitiş
+
+HTML comment blogu:
+src : (?s)<!-- BAŞLANGIÇ -->.*?<!-- BİTİŞ -->
+
+=========================================================
+22) MULTILINE (?m) vs \n...\n FARKI
+=========================================================
+(?m)^...$  -> newline TUKETMEZ, ilk/son satir da yakalanir
+\n...\n     -> newline TUKETIR, dst'de geri koymak gerekir
+...$\n?     -> newline opsiyonel (son satir icin)
+
+=========================================================
+23) MACRO (RegexMacroProcessor) FORMATI
+=========================================================
+Format:
+  <srcRegex><SEP><dstRegex>[<SEP>caseMagic]
+SEP: ~~~  @@@  ^^^  ;;;
+
+Ornekler:
+  ([A-Z][a-z]+)~~~$1~~~upperCase
+  ([A-Z][a-z]+)@@@$1@@@upperCase
+  ([A-Z][a-z]+)^^^$1^^^upperCase
+  ([A-Z][a-z]+);;;$1;;;upperCase
+
+caseMagic direktifleri:
+  upperCase, lowerCase, capitalize, invertCase,
+  titleCase, trim, reverse, none
+  upper$N, lower$N, capitalize$N, invert$N, trim$N
+  replace:A:B, pad:N, padZero:N, repeat:N,
+  wrap:LEFT:RIGHT, if:GLOB:THEN:ELSE
+
+=========================================================
+24) ESCAPE SEQUENCE HATIRLATMA
+=========================================================
+Regex'te   Java String'de
+\d     ->   \\d
+\w     ->   \\w
+\s     ->   \\s
+\b     ->   \\b
+\n     ->   \\n
+\r     ->   \\r
+\t     ->   \\t
+\.     ->   \\.
+\\     ->   \\\\
+
+=========================================================
+SON
+=========================================================

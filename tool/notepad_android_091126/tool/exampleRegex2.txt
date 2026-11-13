@@ -1,0 +1,62 @@
+=========================================================================================
+📖 E-BOOK / TEXT TEMİZLEME REGEX KILAVUZU
+=========================================================================================
+Not: Java kodunda kullanırken regex içindeki ters eğik çizgileri ( \ )
+çiftleyerek ( \\ ) yazmayı unutma! (Örn: \s yerine \\s, \p{L} yerine \\p{L})
+=========================================================================================
+
+1. SOHBETİMİZDE GEÇEN TEMEL FORMÜLLER
+-----------------------------------------------------------------------------------------
+• Amaç: Tüm emojileri ve gizli PDF kontrol karakterlerini (çöpleri) silmek
+  - Aranan (From): [^\p{L}\p{N}\p{P}\s]
+  - Değişen (To)  : (Boş bırak - Sil)
+
+• Amaç: Harf aralarındaki tekil boşlukları silmek (Örn: "s e l a m  M u r a t" -> "selam Murat")
+  - Aranan (From): (?<=\p{L})\s(?=\p{L})
+  - Değişen (To)  : (Boş bırak - Sil)
+  *Not: Bu işlemden sonra kelime arasında kalan çoklu boşlukları teke indirmek için alttaki 3. formülü çalıştır.
+
+• Amaç: Çoklu boşlukları ve tab karakterlerini tek bir normal boşluğa indirmek
+  - Aranan (From): [ \t]+
+  - Değişen (To)  : " " (Tek bir boşluk tuşu)
+
+
+2. PDF DÖNÜŞÜMÜNDEKİ SATIR VE HECELEME HATALARINI DÜZELTME
+-----------------------------------------------------------------------------------------
+• Amaç: Satır sonundaki tire ile bölünen kelimeleri birleştirmek (Örn: "ornek-\nmetin" -> "ornekmetin")
+  - Aranan (From): (-\s*\r?\n\s*)
+  - Değişen (To)  : (Boş bırak - Sil)
+
+• Amaç: Kitaptaki tamamen boş satırları veya sadece boşluk içeren gereksiz satırları silmek
+  - Aranan (From): (?m)^\s*$\n?
+  - Değişen (To)  : (Boş bırak - Sil)
+
+• Amaç: Paragraf ortasında kalan, PDF'ten dolayı yanlışlıkla atılmış satır başlarını (LF) temizlemek
+  (Eğer satır küçük harfle devam ediyorsa, aslında o satır bitmemiştir mantığıyla çalışır)
+  - Aranan (From): \r?\n(?=\p{Ll})
+  - Değişen (To)  : " " (Tek boşluk - satırları birleştirir)
+  *Not: \p{Ll} sadece küçük harfleri hedef alır.
+
+
+3. SAYFA NUMARALARI VE DİPNOTLARI AYIKLAMA (YENİ)
+-----------------------------------------------------------------------------------------
+• Amaç: Satır başında veya sonunda tek başına duran sayfa numaralarını silmek (Örn: "Sayfa 42" veya "42")
+  - Aranan (From): (?m)(^\s*\d+\s*$|^Sayfa\s+\d+\s*$)
+  - Değişen (To)  : (Boş bırak - Sil)
+
+• Amaç: Metin içine gömülmüş parantez içi veya köşeli parantez içi dipnot numaralarını silmek (Örn: "[12]" veya "(1)")
+  - Aranan (From): \[\d+\]|\(\d+\)
+  - Değişen (To)  : (Boş bırak - Sil)
+
+
+4. BAŞLIK VE METİN BİÇİMLENDİRME (YENİ)
+-----------------------------------------------------------------------------------------
+• Amaç: "BÖLÜM 1", "BÖLÜM II" gibi başlıkların altındaki ve üstündeki boşlukları standart hale getirmek
+  - Aranan (From): (?i)(bölüm\s+\w+)
+  - Değişen (To)  : \n\n$1\n\n (Başlığın altına ve üstüne çift satır boşluğu ekler)
+
+• Amaç: Cümle bitimindeki noktadan sonra boşluk bırakılmamışsa otomatik boşluk eklemek (Örn: "bitti.Yeni" -> "bitti. Yeni")
+  - Aranan (From): (?<=\p{L}\.)(?=\p{Lu})
+  - Değişen (To)  : " " (Tek boşluk)
+  *Not: \p{Lu} büyük harfleri temsil eder.
+=======================================================================================

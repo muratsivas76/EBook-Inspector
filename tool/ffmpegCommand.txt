@@ -1,0 +1,158 @@
+**Animation Guide for Shape and Camera Transformations**
+
+When adding shapes to participate in the animation, specify the incremental changes for each value in the `animTransform` section.
+
+**Example for a sphere shape animation:**
+animTransform = translate(0.1, 0, 0) * rotate(0, 0, 0) * scale(1, 1, 1);
+
+Values set to zero (0) remain unchanged (for scale add like 1.1), while other values are added to the original transform in each frame. In this example, the translateX value increases by 0.1 incrementally in every frame.
+
+And incDecIntension value too will be adding light intensity value in each step.
+
+**Frame Count:**
+Enter the desired number of frames in the `image/frameCount` field located in the AnimSettings section.
+
+**Camera Animation:**
+The values entered in the `cameraAnimPos` field (within AnimSettings) are added to the camera's original position in each frame. You may use positive or negative values.
+
+**Example:** Entering "0.1, 0, 0" in `cameraAnimPos` will shift the camera's X position 0.1 units to the right in every frame.
+
+**Our Coordinate System:**
+- **+X**: Right
+- **-X**: Left  
+- **+Y**: Up
+- **-Y**: Down
+- **+Z**: Toward me (closer, back direction)
+- **-Z**: Away from me (further, forward direction)
+
+**Framerate vs. On-Screen Duration:**
+- `-framerate 1` → Each frame displays for 1 second
+- `-framerate 2` → Each frame displays for 0.5 seconds
+- `-framerate 4` → Each frame displays for 0.25 seconds
+- `-framerate 10` → Each frame displays for 0.1 seconds
+
+**Formula:** `1 / framerate = seconds_per_frame`
+
+**Example with 10 frames:**
+- `framerate 1` → 10-second video (10 frames × 1 second)
+- `framerate 2` → 5-second video (10 frames × 0.5 seconds)
+- `framerate 0.5` → 20-second video (10 frames × 2 seconds)
+
+Extra Information:
+
+## **Tutorial: Basic Animation Mathematics for Ray Tracing & 3D Graphics**
+
+### **1. Core Formula: The Foundation of All Animation**
+
+The timing and smoothness of any digital animation are controlled by two fundamental formulas.
+
+**Formula 1: Total Frame Count**
+> `Total Frames = Target Duration (seconds) × Target Frame Rate (FPS)`
+
+This calculates how many individual images (frames) you need to render.
+
+*   **Example:** For a 10-second animation at 30 FPS:
+    `10 × 30 = 300 Frames`
+
+**Formula 2: Increment/Step Size**
+> `Step Size = Total Change in Value / Total Frames`
+
+This calculates how much you should change an object's property (like position) for each frame to achieve a smooth movement from point A to point B.
+
+*   **Example:** A sphere moving from Z = -10 to Z = 0.
+    *   Total Change = `0 - (-10) = 10`
+    *   Step Size = `10 / 300 = 0.0333`
+    *   **Action:** Add `0.0333` to the sphere's Z-position in every frame.
+
+### **2. Frame Rate (FPS) Guide: Balancing Smoothness and Cost**
+
+The FPS you choose is a trade-off between smoothness and rendering time.
+
+*   **24 FPS:** Cinematic standard. Gives a "film-like" feel.
+*   **30 FPS (Recommended):** Standard for video/TV. A good balance of smoothness and reasonable render times.
+*   **60 FPS:** Very smooth, ideal for fast-action content. **Doubles the render time** compared to 30 FPS.
+*   **10 FPS or lower:** Can appear choppy, but is a **practical choice for quick tests, prototypes, or non-critical animations** on low-power computers. Creates a "stop-motion" aesthetic.
+
+### **3. Optimization for Low-End Computers**
+
+If your PC is struggling, don't reduce the FPS alone. Combine these strategies for the best results:
+
+1.  **Reduce Frame Count:** Lower the `Total Frames` for the same duration (e.g., 10 seconds @ 10 FPS = 100 frames). This is the fastest way to reduce workload.
+2.  **Lower Render Resolution:**
+    *   `640x480` (SD) is excellent for simple educational content.
+    *   `320x240` is perfect for ultra-fast prototyping.
+3.  **Simplify the Scene:**
+    *   Use simple materials and geometry.
+    *   Reduce the number of light sources.
+    *   Lower Ray Tracing samples per pixel (e.g., from 1000 to 100).
+
+**Remember:** A low-quality render is better than no render at all!
+
+### **4. Practical Example: "Hello" & "Hei" Animation**
+
+Let's animate two spheres moving to the center of the screen to represent words.
+
+```java
+// Initial Positions
+float sphereHello_X = -3.0f; // "Hello" starts on the left
+float sphereHei_X   =  3.0f; // "Hei" starts on the right
+float targetX       =  0.0f; // Both meet in the center
+
+// Animation Settings
+float duration = 6.0f; // 6-second animation
+float fps = 10.0f;     // Low FPS for speed
+int totalFrames = (int)(duration * fps); // 60 frames
+
+// Calculate Step Sizes
+float stepHello = (targetX - sphereHello_X) / totalFrames; // = +0.05 per frame
+float stepHei   = (targetX - sphereHei_X)   / totalFrames; // = -0.05 per frame
+
+// Rendering Loop
+for (int frame = 1; frame <= totalFrames; frame++) {
+    // Update Positions
+    sphereHello_X += stepHello;
+    sphereHei_X   += stepHei;
+
+    // Render the scene with new positions
+    renderScene();
+
+    // Save the frame (e.g., scene_001.png, scene_002.png...)
+    saveFrame("scene_%03d.png", frame);
+}
+```
+
+### **5. Final Checklist & Workflow**
+
+1.  **Plan:** Decide on your animation's total `Duration` and target `FPS`.
+2.  **Calculate:** Use the formulas to find `Total Frames` and `Step Size`.
+3.  **Test Render:** Always do a low-quality, short test (e.g., 20 frames) to check timing and movement.
+4.  **Full Render:** Start the full render only after the test is approved.
+5.  **Encode:** Use FFmpeg to compile the image sequence (`scene_%03d.png`) into an MP4 video.
+
+---
+**Summary of Key Formulas:**
+- `Total Frames = Duration (s) × FPS`
+- `Step Size = (End Value - Start Value) / Total Frames`
+
+Happy rendering
+
+**Basic MP4 Creation Command:**
+ffmpeg -framerate 2 -i animImages/animScene_111125_%03d.png -c:v libx264 -pix_fmt yuv420p -crf 18 -preset slow -r 25 movs/animasyon.mp4
+
+**MP4 with Audio:**
+ffmpeg -framerate 2 -i animImages/animScene_111125_%03d.png -i audios/ilkbahar.mp3 -i audios/sonbahar.mp3 \
+-filter_complex \
+"[1:a]adelay=2000|2000[ilkbahar]; \
+ [2:a]adelay=3500|3500[sonbahar]; \
+ [ilkbahar][sonbahar]amix=inputs=2[a]" \
+-map 0:v -map "[a]" -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k \
+movs/mevsimler.mp4
+
+An util command:
+ffmpeg -framerate 1 -i "images/image_%03d.png" -c:v libx264 -crf 23 -preset fast -pix_fmt yuv420p -r 30 -movflags +faststart telegram_video.mp4
+
+**View MP4:**
+celluloid movs/mevsimler.mp4
+OR
+vlc movs/mevsimler.mp4
+

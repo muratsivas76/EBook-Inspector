@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General -->
+    <string name="program_name">Notepad</string>
+    <string name="hint_github">GPL V3 - https://github.com/muratsivas76/Android29-Notepad</string>
+
+    <!-- File Operations -->
+    <string name="menu_new">New</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_open_enc">Open Encrypted</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_save_enc">Save Encrypted</string>
+
+    <!-- Edit Operations -->
+    <string name="menu_find">Find</string>
+    <string name="menu_replace">Replace</string>
+    <string name="action_find">FIND</string>
+    <string name="action_replace">REPLACE</string>
+
+    <!-- Tools -->
+    <string name="menu_tools">Tools</string>
+    <string name="menu_insert_date">Insert Date</string>
+    <string name="menu_clean_spaces">Clean Spaces</string>
+    <string name="menu_trim_lines">Trim Lines</string>
+    <string name="menu_clear_junk">Clear Junk</string>
+    <string name="menu_beautify">Beautify Text</string>
+
+    <!-- Technical Tools (New) -->
+    <string name="menu_char_info">Show Character Info</string>
+    <string name="menu_append_char">Append Character</string>
+
+    <!-- Settings -->
+    <string name="menu_encoding">Encoding</string>
+    <string name="enc_utf8">UTF-8</string>
+    <string name="enc_tr">ISO-8859-9</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_enter_password">Enter Password</string>
+    <string name="dialog_enter_char_code">Enter Character Code (Dec or \\uXXXX)</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+</resources>
